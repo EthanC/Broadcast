@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "Broadcast"
 version = "1.0.0"
-description = "Call of Duty feed watcher that reports news via Discord."
+description = "Call of Duty feed watcher that reports the news via Discord."
 authors = ["Ethan C <16727756+EthanC@users.noreply.github.com>"]
 license = "MIT"
 

@@ -11,7 +11,7 @@ from utils import Utility
 
 class Broadcast:
     """
-    Call of Duty feed watcher that reports news via Discord.
+    Call of Duty feed watcher that reports the news via Discord.
 
     https://github.com/EthanC/Broadcast
     """

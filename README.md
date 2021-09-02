@@ -1,6 +1,6 @@
 # Broadcast
 
-Broadcast is a Call of Duty feed watcher that reports news via Discord.
+Broadcast is a Call of Duty feed watcher that reports the news via Discord.
 
 Supported Feeds:
 
