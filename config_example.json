@@ -1,0 +1,19 @@
+{
+    "logging": {
+        "severity": "DEBUG",
+        "discord": {
+            "enable": true,
+            "severity": "WARNING",
+            "webhookUrl": "https://discord.com/api/webhooks/XXXXX/XXXXX"
+        }
+    },
+    "discord": {
+        "username": "Broadcast",
+        "avatarUrl": "https://i.imgur.com/6CNKsKZ.png",
+        "webhookUrl": "https://discord.com/api/webhooks/XXXXX/XXXXX"
+    },
+    "sources": {
+        "blog": { "enable": true, "language": "en" },
+        "motd": { "enable": true, "language": "en" }
+    }
+}
