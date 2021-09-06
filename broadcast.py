@@ -238,7 +238,7 @@ class Broadcast:
 
             # Ensure no changes go without notification
             if success is True:
-                self.history["blog"] = current
+                self.history["motd"] = current
                 self.changed = True
 
         if self.changed is not True:
