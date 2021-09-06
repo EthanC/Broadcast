@@ -135,14 +135,14 @@ class Broadcast:
             self, f"https://www.callofduty.com/site/cod/franchiseFeed/{language}"
         )
 
-        if (data is None) or (len(data.get("blog", [])) != 50):
+        if (data is None) or (len(data.get("blog", [])) == 0):
             return
 
         current: List[str] = []
         data = data["blog"]
 
         for item in data:
-            current.append(item["url"])
+            current.append(item.get("url", "Unknown").replace("?app=true", ""))
 
         if len(past) == 0:
             logger.info(
@@ -151,10 +151,6 @@ class Broadcast:
 
             self.history["blog"] = current
             self.changed = True
-
-            return
-        elif past == current:
-            logger.info("Call of Duty blog not updated")
 
             return
 
@@ -216,10 +212,6 @@ class Broadcast:
             self.changed = True
 
             return
-        elif past == current:
-            logger.info("Call of Duty Message of the Day not updated")
-
-            return
 
         for item in data:
             name: str = item["name"]
@@ -232,7 +224,7 @@ class Broadcast:
             self.history["motd"] = current
             self.changed = True
 
-            Broadcast.Notify(
+            success: bool = Broadcast.Notify(
                 self,
                 {
                     "title": item["data"]["title"],
@@ -243,6 +235,14 @@ class Broadcast:
                     else f"https://callofduty.com{i}",
                 },
             )
+
+            # Ensure no changes go without notification
+            if success is True:
+                self.history["blog"] = current
+                self.changed = True
+
+        if self.changed is not True:
+            logger.info("Call of Duty Message of the Day not updated")
 
     def Notify(self: Any, data: Dict[str, Any]) -> bool:
         """Report feed updates to the configured Discord webhook."""
