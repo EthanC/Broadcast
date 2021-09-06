@@ -135,7 +135,7 @@ class Broadcast:
             self, f"https://www.callofduty.com/site/cod/franchiseFeed/{language}"
         )
 
-        if (data is None) or (len(data.get("blog", [])) == 0):
+        if (data is None) or (len(data.get("blog", [])) != 50):
             return
 
         current: List[str] = []
@@ -159,17 +159,14 @@ class Broadcast:
             return
 
         for item in data:
-            url: str = item["url"]
+            url: str = item.get("url", "Unknown").replace("?app=true", "")
 
             if url in past:
                 continue
 
             logger.success(f"New Call of Duty blog post, {url}")
 
-            self.history["blog"] = current
-            self.changed = True
-
-            Broadcast.Notify(
+            success: bool = Broadcast.Notify(
                 self,
                 {
                     "title": item["title"],
@@ -180,6 +177,14 @@ class Broadcast:
                     "author": item.get("author"),
                 },
             )
+
+            # Ensure no changes go without notification
+            if success is True:
+                self.history["blog"] = current
+                self.changed = True
+
+        if self.changed is not True:
+            logger.info("Call of Duty blog not updated")
 
     def ProcessMOTD(self: Any, language: str) -> None:
         """
