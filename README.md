@@ -8,7 +8,7 @@ Supported Feeds:
 -   [Call of Duty Companion App](https://www.callofduty.com/app) Message of the Day
 
 <p align="center">
-    <img src="https://i.imgur.com/E5dGwgc.png" draggable="false">
+    <img src="https://i.imgur.com/KtayQEy.png" draggable="false">
 </p>
 
 ## Usage
