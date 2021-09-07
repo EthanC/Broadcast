@@ -1,7 +1,7 @@
 import json
 import re
 from time import sleep
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 import httpx
 from httpx import HTTPError, Response, TimeoutException
@@ -100,3 +100,29 @@ class Utility:
         )
 
         return re.sub(expression, "", input)
+
+    def Unslug(self: Any, input: str) -> str:
+        """Convert the provided slug strings to a human-readable format."""
+
+        result: str = ""
+
+        items: List[str] = input.split(",")
+        i: int = 0
+
+        for item in items:
+            parts: List[str] = item.split("-")
+            p: int = 0
+
+            for part in parts:
+                result += part.title()
+
+                p += 1
+
+                if p < len(parts):
+                    result += " "
+            i += 1
+
+            if i < len(items):
+                result += ", "
+
+        return result

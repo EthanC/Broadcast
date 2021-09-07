@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 from sys import exit, stderr
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from loguru import logger
 from notifiers.logging import NotificationHandler
@@ -130,6 +130,7 @@ class Broadcast:
         """
 
         past: List[str] = self.history["blog"]
+        blogChanged: bool = False
 
         data: Optional[Dict[str, Any]] = Utility.GET(
             self, f"https://www.callofduty.com/site/cod/franchiseFeed/{language}"
@@ -151,6 +152,7 @@ class Broadcast:
 
             self.history["blog"] = current
             self.changed = True
+            blogChanged = True
 
             return
 
@@ -162,6 +164,26 @@ class Broadcast:
 
             logger.success(f"New Call of Duty blog post, {url}")
 
+            fields: List[Dict[str, Union[str, bool]]] = []
+
+            if (value := item["metadata"].get("contentItemType")) is not None:
+                fields.append(
+                    {
+                        "name": "Content Type",
+                        "value": Utility.Unslug(self, value),
+                        "inline": True,
+                    }
+                )
+
+            if (value := item["metadata"].get("game")) is not None:
+                fields.append(
+                    {
+                        "name": "Game",
+                        "value": Utility.Unslug(self, value),
+                        "inline": True,
+                    }
+                )
+
             success: bool = Broadcast.Notify(
                 self,
                 {
@@ -171,6 +193,7 @@ class Broadcast:
                     "color": int("FFFFFF", base=16),
                     "image": item["dimg"],
                     "author": item.get("author"),
+                    "fields": fields,
                 },
             )
 
@@ -178,8 +201,9 @@ class Broadcast:
             if success is True:
                 self.history["blog"] = current
                 self.changed = True
+                blogChanged = True
 
-        if self.changed is not True:
+        if blogChanged is not True:
             logger.info("Call of Duty blog not updated")
 
     def ProcessMOTD(self: Any, language: str) -> None:
@@ -189,6 +213,7 @@ class Broadcast:
         """
 
         past: List[str] = self.history["motd"]
+        motdChanged: bool = False
 
         data: Optional[Dict[str, Any]] = Utility.GET(
             self, f"https://www.callofduty.com/site/cod/franchiseFeed/{language}"
@@ -210,6 +235,7 @@ class Broadcast:
 
             self.history["motd"] = current
             self.changed = True
+            motdChanged = True
 
             return
 
@@ -221,8 +247,20 @@ class Broadcast:
 
             logger.success(f"New Call of Duty Message of the Day, {name}")
 
+            fields: List[Dict[str, Union[str, bool]]] = []
+
+            if (value := item["metadata"].get("priority")) is not None:
+                fields.append(
+                    {
+                        "name": "Priority",
+                        "value": f"{value}",
+                        "inline": True,
+                    }
+                )
+
             self.history["motd"] = current
             self.changed = True
+            motdChanged = True
 
             success: bool = Broadcast.Notify(
                 self,
@@ -233,6 +271,7 @@ class Broadcast:
                     "image": None
                     if (i := item["data"].get("image")) is None
                     else f"https://callofduty.com{i}",
+                    "fields": fields,
                 },
             )
 
@@ -240,8 +279,9 @@ class Broadcast:
             if success is True:
                 self.history["motd"] = current
                 self.changed = True
+                motdChanged = True
 
-        if self.changed is not True:
+        if motdChanged is not True:
             logger.info("Call of Duty Message of the Day not updated")
 
     def Notify(self: Any, data: Dict[str, Any]) -> bool:
@@ -267,6 +307,7 @@ class Broadcast:
                     },
                     "image": {"url": data["image"]},
                     "author": {"name": data.get("author")},
+                    "fields": data["fields"],
                 }
             ],
         }
