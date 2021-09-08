@@ -136,7 +136,7 @@ class Broadcast:
             self, f"https://www.callofduty.com/site/cod/franchiseFeed/{language}"
         )
 
-        if (data is None) or (len(data.get("blog", [])) == 0):
+        if (data is None) or (len(data.get("blog", [])) != 50):
             return
 
         current: List[str] = []
