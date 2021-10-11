@@ -135,12 +135,22 @@ class Broadcast:
         data: Optional[Dict[str, Any]] = Utility.GET(
             self, f"https://www.callofduty.com/site/cod/franchiseFeed/{language}"
         )
+        length: int = len(data.get("blog", []))
 
-        if (data is None) or (len(data.get("blog", [])) != 50):
+        try:
+            if (data is None) or (length == 0):
+                raise ValueError("did not receive a valid response")
+            elif length != 105:
+                raise ValueError(
+                    f"received invalid response (expected length 105 got {length:,})"
+                )
+        except Exception as e:
+            logger.debug(f"Failed to process Call of Duty blog, {e}")
+
             return
 
         current: List[str] = []
-        data = data["blog"]
+        data = data["blog"][:5]
 
         for item in data:
             current.append(item.get("url", "Unknown").replace("?app=true", ""))
