@@ -104,6 +104,8 @@ class Utility:
     def Unslug(self: Any, input: str) -> str:
         """Convert the provided slug strings to a human-readable format."""
 
+        alwaysCaps: List[str] = ["COD", "CDL"]
+
         result: str = ""
 
         items: List[str] = input.split(",")
@@ -114,7 +116,10 @@ class Utility:
             p: int = 0
 
             for part in parts:
-                result += part.title()
+                if (v := part.upper()) in alwaysCaps:
+                    result += v
+                else:
+                    result += part.title()
 
                 p += 1
 
