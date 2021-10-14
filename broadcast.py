@@ -194,6 +194,18 @@ class Broadcast:
                     }
                 )
 
+            if (value := item["blogParsys"].get("atvi_video")) is not None:
+                if (value.get("vendorId") == "youtube") and (
+                    (vId := value.get("videoId")) is not None
+                ):
+                    fields.append(
+                        {
+                            "name": "Video",
+                            "value": f"[{vId}](https://youtu.be/{vId})",
+                            "inline": True,
+                        }
+                    )
+
             success: bool = Broadcast.Notify(
                 self,
                 {
