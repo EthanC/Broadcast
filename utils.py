@@ -1,11 +1,11 @@
 import json
-import re
 from time import sleep
 from typing import Any, Dict, List, Optional
 
 import httpx
 from httpx import HTTPError, Response, TimeoutException
 from loguru import logger
+from markdownify import markdownify
 
 
 class Utility:
@@ -92,14 +92,10 @@ class Utility:
 
         return True
 
-    def StripHTML(self: Any, input: str) -> str:
-        """Remove the HTML formatting from the provided string."""
+    def ConvertHTML(self: Any, input: str) -> str:
+        """Convert the provided HTML string to markdown format."""
 
-        expression: re.Pattern[str] = re.compile(
-            "<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});"
-        )
-
-        return re.sub(expression, "", input)
+        return markdownify(input, heading_style="ATX", bullets="-")
 
     def Unslug(self: Any, input: str) -> str:
         """Convert the provided slug strings to a human-readable format."""

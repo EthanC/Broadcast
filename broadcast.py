@@ -276,7 +276,7 @@ class Broadcast:
                 self,
                 {
                     "title": item["data"]["title"],
-                    "description": Utility.StripHTML(self, item["data"]["entryText"]),
+                    "description": Utility.ConvertHTML(self, item["data"]["entryText"]),
                     "color": int("FFFFFF", base=16),
                     "image": None
                     if (i := item["data"].get("image")) is None
