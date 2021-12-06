@@ -140,9 +140,9 @@ class Broadcast:
         try:
             if (data is None) or (length == 0):
                 raise ValueError("did not receive a valid response")
-            elif length != 105:
+            elif length != 104:
                 raise ValueError(
-                    f"received invalid response (expected length 105 got {length:,})"
+                    f"received invalid response (expected length 104 got {length:,})"
                 )
         except Exception as e:
             logger.debug(f"Failed to process Call of Duty blog, {e}")
